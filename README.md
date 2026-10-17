@@ -110,7 +110,7 @@ flowchart TD
 ### خطوات التثبيت:
 1. قم بتحميل أو استنساخ المستودع (Clone):
    ```bash
-   git clone https://github.com/your-username/tibyan-hadith-verifier.git
+   git clone https://github.com/FadySZDev/tibyan-hadith-verifier.git
    ```
 2. افتح متصفحك وانتقل إلى صفحة الإضافات:
    * في **Chrome**: اكتب في شريط العناوين `chrome://extensions/`
