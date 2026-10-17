@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="50%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded squircle -->
+  <rect x="24" y="24" width="464" height="464" rx="100" fill="url(#bgGrad)" filter="url(#shadow)"/>
+  
+  <!-- Subtle inner border -->
+  <rect x="36" y="36" width="440" height="440" rx="88" fill="none" stroke="#ffffff" stroke-opacity="0.15" stroke-width="4"/>
+
+  <!-- Islamic octagram decorative star background subtle -->
+  <g transform="translate(256,256) scale(1.1)" opacity="0.08" fill="#ffffff">
+    <rect x="-90" y="-90" width="180" height="180" rx="16"/>
+    <rect x="-90" y="-90" width="180" height="180" rx="16" transform="rotate(45)"/>
+  </g>
+
+  <!-- Magnifying glass / Inspection ring in Gold -->
+  <circle cx="236" cy="236" r="110" fill="none" stroke="url(#goldGrad)" stroke-width="26" filter="url(#shadow)"/>
+  <line x1="316" y1="316" x2="390" y2="390" stroke="url(#goldGrad)" stroke-width="32" stroke-linecap="round"/>
+
+  <!-- Arabic letter "ت" (Tibyan) inside lens -->
+  <text x="236" y="278" font-family="'Tajawal', 'Cairo', 'Amiri', 'Traditional Arabic', sans-serif" font-size="140" font-weight="900" fill="#ffffff" text-anchor="middle">
+    ت
+  </text>
+
+  <!-- Small Verification Checkmark in top corner -->
+  <circle cx="340" cy="140" r="32" fill="#10b981" stroke="#ffffff" stroke-width="6"/>
+  <path d="M328 140 L336 148 L354 130" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

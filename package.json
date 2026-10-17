@@ -1,0 +1,27 @@
+{
+  "name": "tibyan-hadith-verifier",
+  "version": "1.0.0",
+  "description": "Instant, one-click prophetic hadith authenticity checker and citation verifier browser extension.",
+  "main": "src/background/service-worker.js",
+  "scripts": {
+    "test": "node test/test-verifier.js"
+  },
+  "keywords": [
+    "hadith",
+    "hadith-verifier",
+    "islamic",
+    "dorar",
+    "sunnah",
+    "chrome-extension",
+    "browser-extension",
+    "manifest-v3",
+    "arabic-nlp",
+    "open-source"
+  ],
+  "author": "Tibyan Open Source Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/tibyan-hadith-verifier.git"
+  }
+}

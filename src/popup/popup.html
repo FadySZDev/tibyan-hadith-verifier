@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تبيان | للتحقق من صحة الأحاديث</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-wrapper">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="header-brand">
+        <div class="logo-box">ت</div>
+        <div class="brand-text">
+          <h1>تِبْيَان</h1>
+          <span class="subtitle">محقق الأحاديث النبوية</span>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="version-tag">v1.0.0</span>
+      </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+      <div class="input-container">
+        <textarea 
+          id="hadith-input" 
+          rows="3" 
+          placeholder="اكتب أو الصق نص الحديث هنا للتحقق من صحته ودرجته..."
+          autocomplete="off"
+        ></textarea>
+      </div>
+
+      <div class="search-actions">
+        <button id="verify-btn" class="btn btn-primary">
+          <span class="btn-icon">🔍</span>
+          <span>تحقق الآن</span>
+        </button>
+        <button id="clear-btn" class="btn btn-ghost" title="مسح">
+          <span>مسح</span>
+        </button>
+      </div>
+
+      <!-- Quick samples -->
+      <div class="quick-samples">
+        <span class="samples-title">جرب نماذج شائعة:</span>
+        <div class="sample-chips">
+          <button class="chip" data-sample="إنما الأعمال بالنيات">إنما الأعمال بالنيات</button>
+          <button class="chip" data-sample="اطلبوا العلم ولو بالصين">اطلبوا العلم بالصين</button>
+          <button class="chip" data-sample="من غشنا فليس منا">من غشنا فليس منا</button>
+          <button class="chip" data-sample="حب الوطن من الإيمان">حب الوطن من الإيمان</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading State -->
+    <div id="loading-state" class="state-container hidden">
+      <div class="spinner"></div>
+      <p>جارٍ فحص الحديث وتخريجه من الموسوعة الحديثية...</p>
+    </div>
+
+    <!-- Result Section -->
+    <section id="result-section" class="result-section hidden">
+      <!-- Generated Result Card will be inserted here -->
+    </section>
+
+    <!-- History Section -->
+    <section class="history-section">
+      <div class="history-header">
+        <h2>⏱️ عمليات الفحص الأخيرة</h2>
+        <button id="clear-history-btn" class="text-btn">مسح السجل</button>
+      </div>
+      <div id="history-list" class="history-list">
+        <div class="empty-history">لا توجد عمليات فحص سابقة حتى الآن.</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <div class="footer-links">
+        <a href="https://dorar.net" target="_blank" rel="noopener">الموسوعة الحديثية (الدرر السنية)</a>
+        <span>•</span>
+        <a href="https://github.com" target="_blank" rel="noopener" id="github-link">كود المشروع مفتوح المصدر</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../utils/text-cleaner.js"></script>
+  <script src="../utils/offline-dataset.js"></script>
+  <script src="../utils/verifier-engine.js"></script>
+  <script src="../utils/card-generator.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "Tibyan | Hadith Verifier",
+    "description": "The name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Instant, one-click prophetic hadith authenticity checker and citation verifier directly inside your browser.",
+    "description": "The description of the extension"
+  }
+}
