@@ -1,0 +1,57 @@
+name: Release Tibyan Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Package Extension
+        run: |
+          mkdir -p dist
+          zip -r "dist/tibyan-hadith-verifier-${GITHUB_REF_NAME}.zip" \
+            manifest.json \
+            package.json \
+            LICENSE \
+            README.md \
+            _locales \
+            icons \
+            src \
+            -x "*.DS_Store"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          name: "تبيان | Tibyan ${{ github.ref_name }}"
+          body: |
+            ## 🌟 إصدار جديد: تبيان ${{ github.ref_name }}
+            
+            ### ✨ الجديد في هذا الإصدار:
+            - **الحقن البرمجي الذكي والتلقائي (Auto-injection):** تعمل الإضافة فوراً في التبويبات المفتوحة دون الحاجة لإعادة تحميل الصفحات.
+            - **دعم إشعارات سطح المكتب (Desktop Notifications):** إظهار نتائج الفحص حتى على الصفحات المحمية للمتصفح.
+            - **تحديد ذكي لموضع البطاقة:** ظهور البطاقة التفاعلية بدقة أسفل النص المحدد مباشرة.
+            - **ربط مباشر بموسوعة الدرر السنية:** سرعة فائقة في استخراج الأحكام والتخريج الكامل.
+            - **صفر أخطاء (Zero Console Errors):** استقرار تام في جميع المتصفحات المبنية على كروميوم.
+            
+            ---
+            
+            ### 📦 طريقة التثبيت السريعة:
+            1. حمّل ملف `tibyan-hadith-verifier-${{ github.ref_name }}.zip` المرفق أدناه وفك ضغطه.
+            2. افتح متصفحك (Chrome / Edge / Brave) واذهب إلى صفحة الإضافات (`chrome://extensions`).
+            3. فعّل **وضع مطور البرامج (Developer mode)**.
+            4. اضغط **تحميل حزمة غير مضغوطة (Load unpacked)** واختر المجلد المفكوك.
+          draft: false
+          prerelease: false
+          generate_release_notes: false

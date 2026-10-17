@@ -7,13 +7,27 @@
 ### **إضافة ذكية ومفتوحة المصدر للتحقق الفوري من صحة وتخريج الأحاديث النبوية الشريفة بنقرة واحدة**
 *Instant, one-click prophetic Hadith authenticity verifier and citation checker for modern browsers.*
 
+[![Latest Release](https://img.shields.io/badge/Release-v1.1.0-emerald.svg)](https://github.com/FadySZDev/tibyan-hadith-verifier/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue.svg)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![Tests Passing](https://img.shields.io/badge/Tests-100%25%20Passing-success.svg)](test/test-verifier.js)
 [![Chrome & Edge](https://img.shields.io/badge/Browsers-Chrome%20%7C%20Edge%20%7C%20Brave-orange.svg)](#-طريقة-التثبيت-والتشغيل-installation)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-المساهمة-في-المشروع-contributing)
 
-[**العربية**](#-باللغة-العربية) • [**English**](#-in-english) • [**طريقة التثبيت**](#-طريقة-التثبيت-والتشغيل-installation) • [**المعمارية التقنية**](#-المعمارية-التقنية-architecture)
+[**العربية**](#-باللغة-العربية) • [**English**](#-in-english) • [**أمثلة حية**](#-أمثلة-حية-من-داخل-المتصفح-live-screenshots) • [**طريقة التثبيت**](#-طريقة-التثبيت-والتشغيل-installation) • [**المعمارية التقنية**](#-المعمارية-التقنية-architecture)
+
+---
+
+### 📸 أمثلة حية من داخل المتصفح (Live Screenshots)
+
+<div align="center">
+
+| فحص فوري بزر الفأرة الأيمن داخل أي موقع | واجهة الإضافة المنبثقة للبحث المباشر والسجل |
+| :---: | :---: |
+| <img src="assets/screenshots/in-page-verification.png" width="400" alt="فحص الحديث بزر الفأرة الأيمن داخل الصفحة" /> | <img src="assets/screenshots/popup-verification.png" width="340" alt="واجهة الإضافة المنبثقة للبحث المباشر" /> |
+| *ظهور البطاقة التفاعلية فوق النص المحدد مباشرة بضغطة زر* | *الواجهة المنبثقة (v1.1.0) مع نتائج التوثيق الفوري والتخريج الكامل* |
+
+</div>
 
 ---
 
@@ -127,6 +141,10 @@ flowchart TD
 
 ```text
 tibyan-hadith-verifier/
+├── .github/                   # مهام الأتمتة والنشر التلقائي للـ Releases
+│   └── workflows/release.yml
+├── assets/                    # الصور التوضيحية والأمثلة الحية
+│   └── screenshots/
 ├── manifest.json              # إعدادات الإضافة وفق معيار Manifest V3
 ├── LICENSE                    # رخصة الاستخدام الحرة (MIT)
 ├── README.md                  # التوثيق الشامل (عربي وإنجليزي)
