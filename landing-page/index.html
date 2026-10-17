@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تِبْيَان | Tibyan - محقق الأحاديث النبوية الفوري</title>
+  <meta name="description" content="إضافة متصفح ذكية ومفتوحة المصدر للتحقق الفوري من صحة وتخريج الأحاديث النبوية الشريفة بنقرة واحدة من أي موقع.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-light: #10b981;
+      --primary-dark: #047857;
+      --primary-glow: rgba(16, 185, 129, 0.25);
+      --gold: #f59e0b;
+      --gold-light: #fef08a;
+      --bg: #090d16;
+      --card-bg: #111726;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --green: #10b981;
+      --font-ar: 'Tajawal', sans-serif;
+      --font-en: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ar);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: all 0.25s ease;
+    }
+
+    body.lang-en {
+      font-family: var(--font-en);
+      direction: ltr;
+      text-align: left;
+    }
+
+    /* Ambient Background Glows */
+    .bg-glow-1 {
+      position: absolute;
+      top: -150px;
+      right: 15%;
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(9, 13, 22, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow-2 {
+      position: absolute;
+      top: 600px;
+      left: 10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, rgba(9, 13, 22, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 900;
+      box-shadow: 0 8px 20px var(--primary-glow);
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14.5px;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .lang-switcher {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 7px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .lang-switcher:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary-light);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      box-shadow: 0 4px 18px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 26px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      padding: 70px 0 60px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 30px;
+      color: var(--primary-light);
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: 46px;
+      font-weight: 900;
+      line-height: 1.25;
+      max-width: 900px;
+      margin: 0 auto 20px;
+      letter-spacing: -1px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 36px;
+      font-weight: 500;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    /* Interactive Live Demo Window */
+    .demo-window {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      max-width: 940px;
+      margin: 0 auto;
+      overflow: hidden;
+      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.6);
+      text-align: right;
+    }
+
+    body.lang-en .demo-window {
+      text-align: left;
+    }
+
+    .window-header {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .window-url-bar {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      direction: ltr;
+    }
+
+    .window-body {
+      padding: 30px;
+      position: relative;
+    }
+
+    .demo-instructions {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .demo-instructions h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .demo-instructions p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .sample-pill-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .demo-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .demo-pill:hover, .demo-pill.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--primary-light);
+      color: var(--primary-light);
+    }
+
+    /* Live Card Component inside Demo */
+    .mock-webpage {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 24px;
+      position: relative;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mock-selection {
+      background: rgba(16, 185, 129, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .mock-popup-card {
+      margin-top: 18px;
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      color: #1e293b;
+      border-radius: 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      direction: rtl;
+      text-align: right;
+    }
+
+    body.lang-en .mock-popup-card {
+      direction: rtl; /* الأحاديث دائماً باللغة العربية */
+      text-align: right;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .mock-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .mock-card-body {
+      padding: 14px;
+    }
+
+    .badge-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .badge-chip.sahih { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .badge-chip.mawdoo { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .badge-chip.daif { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+
+    .mock-hadith {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #0f172a;
+      background: #f8fafc;
+      padding: 8px 10px;
+      border-right: 3px solid var(--primary);
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .mock-details {
+      font-size: 12px;
+      color: #475569;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .mock-card-footer {
+      display: flex;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .mock-copy-btn {
+      flex: 1;
+      background: #059669;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+
+    .mock-dorar-btn {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* Problem Section */
+    .section {
+      padding: 90px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 50px;
+    }
+
+    .section-badge {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .problem-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 30px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .problem-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ef4444, #f59e0b);
+      opacity: 0.6;
+    }
+
+    .problem-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ef4444;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .problem-card h3 {
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .problem-card p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.7;
+    }
+
+    /* Solution Grid */
+    .solution-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .solution-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 26px;
+      transition: all 0.2s ease;
+    }
+
+    .solution-card:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateY(-4px);
+    }
+
+    .solution-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-light);
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+    .solution-card h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .solution-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Comparison Table */
+    .comparison-wrapper {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 40px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: right;
+    }
+
+    body.lang-en .comparison-table {
+      text-align: left;
+    }
+
+    .comparison-table th, .comparison-table td {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 14.5px;
+    }
+
+    .comparison-table th {
+      background: rgba(255, 255, 255, 0.02);
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .col-feature { width: 34%; }
+    .col-old { width: 33%; color: #94a3b8; }
+    .col-tibyan { width: 33%; color: var(--primary-light); font-weight: 700; background: rgba(16, 185, 129, 0.04); }
+
+    /* Installation Steps */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .step-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .step-box h3 {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .step-box p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .step-box code {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: var(--gold);
+      font-family: monospace;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    /* CTA Banner */
+    .cta-banner {
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.05));
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 24px;
+      padding: 60px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner h2 {
+      font-size: 34px;
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+
+    .cta-banner p {
+      color: var(--text-muted);
+      font-size: 16.5px;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 0;
+      margin-top: 40px;
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .footer a {
+      color: var(--primary-light);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 32px; }
+      .section-title { font-size: 26px; }
+      .nav-links { display: none; }
+      .demo-window { border-radius: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- Navigation -->
+  <div class="container">
+    <nav class="navbar">
+      <a href="#" class="nav-brand">
+        <div class="brand-logo">ت</div>
+        <div class="brand-name">تِبْيَان <span style="font-size: 12px; color: var(--primary-light); font-weight: 600;">Tibyan</span></div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#problem" data-i18n="nav_problem">المشكلة</a></li>
+        <li><a href="#solution" data-i18n="nav_solution">الحل</a></li>
+        <li><a href="#demo" data-i18n="nav_demo">تجربة حية</a></li>
+        <li><a href="#comparison" data-i18n="nav_comparison">المقارنة</a></li>
+        <li><a href="#install" data-i18n="nav_install">التثبيت</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button id="lang-toggle-btn" class="lang-switcher">
+          <i class="fas fa-globe"></i>
+          <span id="lang-label">English</span>
+        </button>
+        <a href="https://github.com/your-username/tibyan-hadith-verifier" target="_blank" rel="noopener" class="btn btn-secondary">
+          <i class="fab fa-github"></i>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-badge">
+        <i class="fas fa-shield-halved"></i>
+        <span data-i18n="hero_badge">مشروع إسلامي تقني مفتوح المصدر لوجه الله تعالى</span>
+      </div>
+
+      <h1 class="hero-title" data-i18n="hero_title">
+        كم من حديث نشرته وظننته نبوياً... <br/>
+        <span class="gradient-text">وهو مكذوب أو لا أصل له؟!</span>
+      </h1>
+
+      <p class="hero-desc" data-i18n="hero_desc">
+        احمِ نفسك ومجتمعك من الأحاديث الموضوعة والضعيفة. تبيان هي إضافة متصفح ذكية تفحص وتخرج أي حديث نبوي بضغطة زر واحدة دون مغادرة الصفحة، مستندةً إلى أصح الموسوعات الحديثية.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#install" class="btn btn-primary" data-i18n="hero_cta_primary">
+          <i class="fas fa-download"></i>
+          <span>تثبيت الإضافة في متصفحك مجاناً</span>
+        </a>
+        <a href="#demo" class="btn btn-secondary" data-i18n="hero_cta_secondary">
+          <i class="fas fa-play"></i>
+          <span>شاهد التجربة الحية</span>
+        </a>
+      </div>
+
+      <!-- Live Interactive Window Simulator -->
+      <div class="demo-window" id="demo">
+        <div class="window-header">
+          <div class="window-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="window-url-bar">
+            <i class="fas fa-lock" style="font-size: 10px;"></i>
+            <span>twitter.com / facebook.com / articles</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted);" data-i18n="demo_live_label">⚡ محاكي حي تفاعلي</div>
+        </div>
+
+        <div class="window-body">
+          <div class="demo-instructions">
+            <h3 data-i18n="demo_title">اضغط على أي نموذج لتجربة الفحص الفوري للحديث:</h3>
+            <p data-i18n="demo_sub">شاهد كيف تظهر شارة التحقق وبطاقة التخريج أمامك فوراً</p>
+          </div>
+
+          <div class="sample-pill-container">
+            <button class="demo-pill active" data-id="china">اطلبوا العلم ولو بالصين</button>
+            <button class="demo-pill" data-id="niyyah">إنما الأعمال بالنيات</button>
+            <button class="demo-pill" data-id="ghash">من غشنا فليس منا</button>
+            <button class="demo-pill" data-id="watan">حب الوطن من الإيمان</button>
+          </div>
+
+          <div class="mock-webpage">
+            <div style="color: #94a3b8; font-size: 13.5px; margin-bottom: 8px;">
+              <span data-i18n="demo_quote_prefix">نص تم تحديده بالماوس:</span>
+              <span class="mock-selection" id="demo-selected-text">«اطلبوا العلمَ ولو بالصِّينِ، فإنَّ طلبَ العِلمِ فريضةٌ»</span>
+            </div>
+
+            <!-- Floating Result Card -->
+            <div class="mock-popup-card" id="demo-card">
+              <div class="mock-card-header">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="background:var(--primary); color:#fff; border-radius:4px; padding:2px 6px; font-size:11px;">ت</span>
+                  <span>تبيان | نتيجة التحقق</span>
+                </div>
+                <span id="demo-offline-tag" style="font-size:11px; color:#10b981;">⚡ فحص فوري</span>
+              </div>
+              <div class="mock-card-body">
+                <span class="badge-chip mawdoo" id="demo-badge">
+                  <i class="fas fa-times-circle"></i>
+                  <span id="demo-grade-label">موضوع / باطل لا أصل له</span>
+                </span>
+                <div class="mock-hadith" id="demo-hadith-text">
+                  «اطلبوا العلمَ ولو بالصِّينِ، فإنَّ طلبَ العِلمِ فريضةٌ على كلِّ مسلمٍ»
+                </div>
+                <div class="mock-details">
+                  <div><strong>⚖️ الحكم:</strong> <span id="demo-grade-val">باطل موضوع لا أصل له</span></div>
+                  <div><strong>👤 الراوي:</strong> <span id="demo-rawi-val">أنس بن مالك</span></div>
+                  <div><strong>📖 المحدث:</strong> <span id="demo-mohadith-val">ابن طاهر / الألباني</span></div>
+                  <div><strong>📚 المصدر:</strong> <span id="demo-book-val">السلسلة الضعيفة (رقم: 416)</span></div>
+                </div>
+              </div>
+              <div class="mock-card-footer">
+                <button class="mock-copy-btn" id="demo-copy-btn">
+                  <i class="fas fa-copy"></i>
+                  <span id="demo-copy-text" data-i18n="copy_card_btn">نسخ بطاقة الرد والتخريج</span>
+                </button>
+                <a href="#" target="_blank" class="mock-dorar-btn" id="demo-dorar-link">الدرر السنية</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+  <section class="section" id="problem">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-i18n="prob_badge">المشكلة الحقيقية</span>
+        <h2 class="section-title" data-i18n="prob_title">لماذا كان لا بد من بناء «تبيان»؟</h2>
+        <p class="section-desc" data-i18n="prob_desc">
+          الكلمة أمانة، ونسبة الحديث للنبي ﷺ بغير تثبت خطر عظيم، لكن واقع الإنترنت جعل الوقوع في الخطأ سهلاً ومكلفاً.
+        </p>
+      </div>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon"><i class="fas fa-triangle-exclamation"></i></div>
+          <h3 data-i18n="prob_card1_t">انتشار الأحاديث المكذوبة والضعيفة</h3>
+          <p data-i18n="prob_card1_d">
+            عشرات الأحاديث الموضوعة والباطلة تُتداول يومياً في مجموعات واتساب وتغريدات ومنشورات، ويصدقها الناس بحسن نية دون علم بحكم علماء الحديث فيها.
+          </p>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-icon"><i class="fas fa-hourglass-half"></i></div>
+          <h3 data-i18n="prob_card2_t">صعوبة وبطء التحقق اليدوي</h3>
+          <p data-i18n="prob_card2_d">
+            للتحقق من حديث، يحتاج القارئ لفتح تبويبات جديدة، والبحث في مواقع متعددة، وقراءة صفحات مطولة بمصطلحات حديثية معقدة تجعل الكثيرين يتكاسلون عن التثبت.
+          </p>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-icon"><i class="fas fa-comment-slash"></i></div>
+          <h3 data-i18n="prob_card3_t">التردد في نصح الآخرين والتصحيح</h3>
+          <p data-i18n="prob_card3_d">
+            حتى حين يعلم المستخدم أن الحديث غير صحيح، يصعب عليه جمع المصدر واسم المحدث ورقم الصفحة لصياغة تعليق تصحيحي موثق يقنع الناشر.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section class="section" id="solution" style="background: rgba(255, 255, 255, 0.015);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" style="color: var(--primary-light);" data-i18n="sol_badge">الحل الذكي بين يديك</span>
+        <h2 class="section-title" data-i18n="sol_title">كيف يغيّر «تبيان» تجربتك بالكامل؟</h2>
+        <p class="section-desc" data-i18n="sol_desc">
+          صممنا تبيان لتكون الأداة الأسرع والأسهل في العالم الإسلامي للتحقق من الأحاديث، بنقرة زر ودون مغادرة صفحتك.
+        </p>
+      </div>
+
+      <div class="solution-grid">
+        <div class="solution-card">
+          <div class="solution-icon"><i class="fas fa-mouse-pointer"></i></div>
+          <h3 data-i18n="sol_card1_t">فحص فوري بضغطة زر</h3>
+          <p data-i18n="sol_card1_d">حدد النص واضغط زر الفأرة الأيمن؛ تظهر لك النتيجة فوراً بجانب مؤشر الماوس دون مغادرة الصفحة أو فتح تبويبات جديدة.</p>
+        </div>
+
+        <div class="solution-card">
+          <div class="solution-icon"><i class="fas fa-palette"></i></div>
+          <h3 data-i18n="sol_card2_t">شارات لونية بديهية</h3>
+          <p data-i18n="sol_card2_d">لون أخضر للصحيح، برتقالي للضعيف، وأحمر للموضوع والمكذوب؛ تفهم درجة الحديث في أقل من ثانية واحدة.</p>
+        </div>
+
+        <div class="solution-card">
+          <div class="solution-icon"><i class="fas fa-share-nodes"></i></div>
+          <h3 data-i18n="sol_card3_t">زر نسخ بطاقة الرد</h3>
+          <p data-i18n="sol_card3_d">بضغطة واحدة، انسخ بطاقة تخريج مصاغة باحترافية تحتوي على الراوي والكتاب والمحدث والرابط، وانشرها في التعليقات فوراً.</p>
+        </div>
+
+        <div class="solution-card">
+          <div class="solution-icon"><i class="fas fa-bolt"></i></div>
+          <h3 data-i18n="sol_card4_t">محرك مدمج دون إنترنت</h3>
+          <p data-i18n="sol_card4_d">تحتوي الإضافة على قاعدة بيانات مدمجة لأشهر الأحاديث الرائجة، مما يمنحك استجابة فائقة السرعة حتى عند انقطاع الإنترنت.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Section -->
+  <section class="section" id="comparison">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-i18n="comp_badge">المقارنة الواقعية</span>
+        <h2 class="section-title" data-i18n="comp_title">التحقق التقليدي مقابل «تبيان»</h2>
+        <p class="section-desc" data-i18n="comp_desc">شاهد الفرق في الوقت والجهد والدقة</p>
+      </div>
+
+      <div class="comparison-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="col-feature" data-i18n="comp_th_f">وجه المقارنة</th>
+              <th class="col-old" data-i18n="comp_th_old">الطريقة التقليدية</th>
+              <th class="col-tibyan" data-i18n="comp_th_new">مع إضافة تبيان ⚡</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="comp_r1_f">وقت التحقق</td>
+              <td data-i18n="comp_r1_old">من 2 إلى 5 دقائق</td>
+              <td data-i18n="comp_r1_new">ثانية واحدة فقط!</td>
+            </tr>
+            <tr>
+              <td data-i18n="comp_r2_f">الخروج من الصفحة</td>
+              <td data-i18n="comp_r2_old">فتح 2 إلى 4 تبويبات جديدة ومغادرة موقعك</td>
+              <td data-i18n="comp_r2_new">0 تبويبات — تظهر النتيجة في نفس مكان النص</td>
+            </tr>
+            <tr>
+              <td data-i18n="comp_r3_f">وضوح الحكم للمستخدم العادي</td>
+              <td data-i18n="comp_r3_old">قراءة أسانيد ومصطلحات معقدة قد تُفهم خطأ</td>
+              <td data-i18n="comp_r3_new">شارة لونية قاطعة (أخضر / برتقالي / أحمر)</td>
+            </tr>
+            <tr>
+              <td data-i18n="comp_r4_f">الرد والتصحيح للآخرين</td>
+              <td data-i18n="comp_r4_old">كتابة يدوية تستغرق وقتاً وغالباً تُهمل</td>
+              <td data-i18n="comp_r4_new">نقرة واحدة لنسخ بطاقة توثيق كاملة ومؤدبة</td>
+            </tr>
+            <tr>
+              <td data-i18n="comp_r5_f">العمل بدون إنترنت</td>
+              <td data-i18n="comp_r5_old">مستحيل تماماً</td>
+              <td data-i18n="comp_r5_new">يدعم فحص أشهر الأحاديث أوفلاين</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Steps -->
+  <section class="section" id="install" style="background: rgba(255, 255, 255, 0.015);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" style="color: var(--primary-light);" data-i18n="inst_badge">ابدأ الآن في دقيقة</span>
+        <h2 class="section-title" data-i18n="inst_title">كيف تثبت الإضافة في متصفحك؟</h2>
+        <p class="section-desc" data-i18n="inst_desc">
+          متوافقة مع جميع متصفحات Chromium (Chrome, Edge, Brave, Opera) وفق أحدث معايير Manifest V3.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-box">
+          <div class="step-number">1</div>
+          <h3 data-i18n="step1_t">حمّل مجلد المشروع</h3>
+          <p data-i18n="step1_d">استنسخ المستودع من GitHub أو حمّله كملف ZIP مفكوك الضغط في جهازك.</p>
+          <code>git clone https://...</code>
+        </div>
+
+        <div class="step-box">
+          <div class="step-number">2</div>
+          <h3 data-i18n="step2_t">افتح صفحة الإضافات</h3>
+          <p data-i18n="step2_d">اكتب الرابط في متصفحك وفعّل خيار وضع مطور البرامج (Developer mode).</p>
+          <code>chrome://extensions</code>
+        </div>
+
+        <div class="step-box">
+          <div class="step-number">3</div>
+          <h3 data-i18n="step3_t">تحميل حزمة غير مضغوطة</h3>
+          <p data-i18n="step3_d">اضغط على زر (Load unpacked) واختر مجلد المشروع <code>tibyan-hadith-verifier</code>.</p>
+        </div>
+
+        <div class="step-box">
+          <div class="step-number">4</div>
+          <h3 data-i18n="step4_t">انطلق بالتحقق!</h3>
+          <p data-i18n="step4_d">حدد أي نص حديث في أي صفحة ويب واضغط زر الفأرة الأيمن لتبدأ الفحص فوراً.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-banner">
+        <h2 data-i18n="cta_title">اجعلها صدقة جارية وشارك في حماية السُنّة</h2>
+        <p data-i18n="cta_desc">
+          مشروع «تبيان» مفتوح المصدر ومتاح مجاناً للجميع. يمكنك المساهمة بنشر الإضافة أو تحسين الكود ووضع نجمة ⭐ على GitHub.
+        </p>
+        <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+          <a href="https://github.com/your-username/tibyan-hadith-verifier" target="_blank" rel="noopener" class="btn btn-primary">
+            <i class="fab fa-github"></i>
+            <span data-i18n="cta_star_btn">ادعم المشروع بنجمة على GitHub ⭐</span>
+          </a>
+          <a href="https://dorar.net" target="_blank" rel="noopener" class="btn btn-secondary">
+            <i class="fas fa-book-open"></i>
+            <span data-i18n="cta_dorar_btn">زيارة الموسوعة الحديثية (الدرر السنية)</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p data-i18n="footer_rights">
+        مشروع «تبيان» مفتوح المصدر بموجب رخصة <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a> • صُمم ونُفذ بواسطة المطور <a href="#">FadySZ</a> لوجه الله تعالى.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bilingual Script & Demo Controller -->
+  <script>
+    const sampleData = {
+      china: {
+        text: '«اطلبوا العلمَ ولو بالصِّينِ، فإنَّ طلبَ العِلمِ فريضةٌ»',
+        hadith: 'اطلبوا العلمَ ولو بالصِّينِ، فإنَّ طلبَ العِلمِ فريضةٌ على كلِّ مسلمٍ',
+        gradeLabel: 'موضوع / باطل لا أصل له',
+        gradeClass: 'mawdoo',
+        gradeVal: 'باطل موضوع لا أصل له',
+        rawi: 'أنس بن مالك',
+        mohadith: 'ابن طاهر / الألباني',
+        book: 'السلسلة الضعيفة (رقم: 416)',
+        dorarUrl: 'https://dorar.net/hadith/search?q=اطلبوا+العلم+ولو+بالصين',
+        isOffline: true
+      },
+      niyyah: {
+        text: '«إنَّما الأَعْمَالُ بالنِّيَّاتِ، وإنَّما لِكُلِّ امْرِئٍ ما نَوَى»',
+        hadith: 'إنَّما الأَعْمَالُ بالنِّيَّاتِ، وإنَّما لِكُلِّ امْرِئٍ ما نَوَى، فمَن كَانَتْ هِجْرَتُهُ إلى دُنْيَا يُصِيبُهَا...',
+        gradeLabel: 'صحيح متفق عليه',
+        gradeClass: 'sahih',
+        gradeVal: 'صحيح',
+        rawi: 'عمر بن الخطاب',
+        mohadith: 'البخاري ومسلم',
+        book: 'صحيح البخاري (1) / صحيح مسلم (1907)',
+        dorarUrl: 'https://dorar.net/hadith/search?q=إنما+الأعمال+بالنيات',
+        isOffline: true
+      },
+      ghash: {
+        text: '«مَن غَشَّ فليسَ مِنَّا، وفي رواية: مَن غَشَّنَا فليسَ مِنَّا»',
+        hadith: 'مَن غَشَّ فليسَ مِنَّا، وفي رواية: مَن غَشَّنَا فليسَ مِنَّا',
+        gradeLabel: 'صحيح',
+        gradeClass: 'sahih',
+        gradeVal: 'صحيح',
+        rawi: 'أبو هريرة',
+        mohadith: 'مسلم',
+        book: 'صحيح مسلم (رقم: 101)',
+        dorarUrl: 'https://dorar.net/hadith/search?q=من+غشنا+فليس+منا',
+        isOffline: true
+      },
+      watan: {
+        text: '«حُبُّ الوَطَنِ مِنَ الإِيمَانِ»',
+        hadith: 'حُبُّ الوَطَنِ مِنَ الإِيمَانِ',
+        gradeLabel: 'موضوع لا أصل له',
+        gradeClass: 'mawdoo',
+        gradeVal: 'موضوع مكذوب لا أصل له مرفوعاً',
+        rawi: '—',
+        mohadith: 'الصغاني / السخاوي / الألباني',
+        book: 'السلسلة الضعيفة (رقم: 36)',
+        dorarUrl: 'https://dorar.net/hadith/search?q=حب+الوطن+من+الإيمان',
+        isOffline: true
+      }
+    };
+
+    // Translations Dictionary
+    const i18n = {
+      ar: {
+        nav_problem: 'المشكلة',
+        nav_solution: 'الحل',
+        nav_demo: 'تجربة حية',
+        nav_comparison: 'المقارنة',
+        nav_install: 'التثبيت',
+        hero_badge: 'مشروع إسلامي تقني مفتوح المصدر لوجه الله تعالى',
+        hero_title: 'كم من حديث نشرته وظننته نبوياً... <br/><span class="gradient-text">وهو مكذوب أو لا أصل له؟!</span>',
+        hero_desc: 'احمِ نفسك ومجتمعك من الأحاديث الموضوعة والضعيفة. تبيان هي إضافة متصفح ذكية تفحص وتخرج أي حديث نبوي بضغطة زر واحدة دون مغادرة الصفحة، مستندةً إلى أصح الموسوعات الحديثية.',
+        hero_cta_primary: '<i class="fas fa-download"></i> تثبيت الإضافة في متصفحك مجاناً',
+        hero_cta_secondary: '<i class="fas fa-play"></i> شاهد التجربة الحية',
+        demo_live_label: '⚡ محاكي حي تفاعلي',
+        demo_title: 'اضغط على أي نموذج لتجربة الفحص الفوري للحديث:',
+        demo_sub: 'شاهد كيف تظهر شارة التحقق وبطاقة التخريج أمامك فوراً',
+        demo_quote_prefix: 'نص تم تحديده بالماوس:',
+        copy_card_btn: 'نسخ بطاقة الرد والتخريج',
+        prob_badge: 'المشكلة الحقيقية',
+        prob_title: 'لماذا كان لا بد من بناء «تبيان»؟',
+        prob_desc: 'الكلمة أمانة، ونسبة الحديث للنبي ﷺ بغير تثبت خطر عظيم، لكن واقع الإنترنت جعل الوقوع في الخطأ سهلاً ومكلفاً.',
+        prob_card1_t: 'انتشار الأحاديث المكذوبة والضعيفة',
+        prob_card1_d: 'عشرات الأحاديث الموضوعة والباطلة تُتداول يومياً في مجموعات واتساب وتغريدات ومنشورات، ويصدقها الناس بحسن نية دون علم بحكم علماء الحديث فيها.',
+        prob_card2_t: 'صعوبة وبطء التحقق اليدوي',
+        prob_card2_d: 'للتحقق من حديث، يحتاج القارئ لفتح تبويبات جديدة، والبحث في مواقع متعددة، وقراءة صفحات مطولة بمصطلحات حديثية معقدة تجعل الكثيرين يتكاسلون عن التثبت.',
+        prob_card3_t: 'التردد في نصح الآخرين والتصحيح',
+        prob_card3_d: 'حتى حين يعلم المستخدم أن الحديث غير صحيح، يصعب عليه جمع المصدر واسم المحدث ورقم الصفحة لصياغة تعليق تصحيحي موثق يقنع الناشر.',
+        sol_badge: 'الحل الذكي بين يديك',
+        sol_title: 'كيف يغيّر «تبيان» تجربتك بالكامل؟',
+        sol_desc: 'صممنا تبيان لتكون الأداة الأسرع والأسهل في العالم الإسلامي للتحقق من الأحاديث، بنقرة زر ودون مغادرة صفحتك.',
+        sol_card1_t: 'فحص فوري بضغطة زر',
+        sol_card1_d: 'حدد النص واضغط زر الفأرة الأيمن؛ تظهر لك النتيجة فوراً بجانب مؤشر الماوس دون مغادرة الصفحة أو فتح تبويبات جديدة.',
+        sol_card2_t: 'شارات لونية بديهية',
+        sol_card2_d: 'لون أخضر للصحيح، برتقالي للضعيف، وأحمر للموضوع والمكذوب؛ تفهم درجة الحديث في أقل من ثانية واحدة.',
+        sol_card3_t: 'زر نسخ بطاقة الرد',
+        sol_card3_d: 'بضغطة واحدة، انسخ بطاقة تخريج مصاغة باحترافية تحتوي على الراوي والكتاب والمحدث والرابط، وانشرها في التعليقات فوراً.',
+        sol_card4_t: 'محرك مدمج دون إنترنت',
+        sol_card4_d: 'تحتوي الإضافة على قاعدة بيانات مدمجة لأشهر الأحاديث الرائجة، مما يمنحك استجابة فائقة السرعة حتى عند انقطاع الإنترنت.',
+        comp_badge: 'المقارنة الواقعية',
+        comp_title: 'التحقق التقليدي مقابل «تبيان»',
+        comp_desc: 'شاهد الفرق في الوقت والجهد والدقة',
+        comp_th_f: 'وجه المقارنة',
+        comp_th_old: 'الطريقة التقليدية',
+        comp_th_new: 'مع إضافة تبيان ⚡',
+        comp_r1_f: 'وقت التحقق',
+        comp_r1_old: 'من 2 إلى 5 دقائق',
+        comp_r1_new: 'ثانية واحدة فقط!',
+        comp_r2_f: 'الخروج من الصفحة',
+        comp_r2_old: 'فتح 2 إلى 4 تبويبات جديدة ومغادرة موقعك',
+        comp_r2_new: '0 تبويبات — تظهر النتيجة في نفس مكان النص',
+        comp_r3_f: 'وضوح الحكم للمستخدم العادي',
+        comp_r3_old: 'قراءة أسانيد ومصطلحات معقدة قد تُفهم خطأ',
+        comp_r3_new: 'شارة لونية قاطعة (أخضر / برتقالي / أحمر)',
+        comp_r4_f: 'الرد والتصحيح للآخرين',
+        comp_r4_old: 'كتابة يدوية تستغرق وقتاً وغالباً تُهمل',
+        comp_r4_new: 'نقرة واحدة لنسخ بطاقة توثيق كاملة ومؤدبة',
+        comp_r5_f: 'العمل بدون إنترنت',
+        comp_r5_old: 'مستحيل تماماً',
+        comp_r5_new: 'يدعم فحص أشهر الأحاديث أوفلاين',
+        inst_badge: 'ابدأ الآن في دقيقة',
+        inst_title: 'كيف تثبت الإضافة في متصفحك؟',
+        inst_desc: 'متوافقة مع جميع متصفحات Chromium (Chrome, Edge, Brave, Opera) وفق أحدث معايير Manifest V3.',
+        step1_t: 'حمّل مجلد المشروع',
+        step1_d: 'استنسخ المستودع من GitHub أو حمّله كملف ZIP مفكوك الضغط في جهازك.',
+        step2_t: 'افتح صفحة الإضافات',
+        step2_d: 'اكتب الرابط في متصفحك وفعّل خيار وضع مطور البرامج (Developer mode).',
+        step3_t: 'تحميل حزمة غير مضغوطة',
+        step3_d: 'اضغط على زر (Load unpacked) واختر مجلد المشروع tibyan-hadith-verifier.',
+        step4_t: 'انطلق بالتحقق!',
+        step4_d: 'حدد أي نص حديث في أي صفحة ويب واضغط زر الفأرة الأيمن لتبدأ الفحص فوراً.',
+        cta_title: 'اجعلها صدقة جارية وشارك في حماية السُنّة',
+        cta_desc: 'مشروع «تبيان» مفتوح المصدر ومتاح مجاناً للجميع. يمكنك المساهمة بنشر الإضافة أو تحسين الكود ووضع نجمة ⭐ على GitHub.',
+        cta_star_btn: 'ادعم المشروع بنجمة على GitHub ⭐',
+        cta_dorar_btn: 'زيارة الموسوعة الحديثية (الدرر السنية)',
+        footer_rights: 'مشروع «تبيان» مفتوح المصدر بموجب رخصة MIT License • صُمم ونُفذ بواسطة المطور FadySZ لوجه الله تعالى.'
+      },
+      en: {
+        nav_problem: 'The Problem',
+        nav_solution: 'Solution',
+        nav_demo: 'Live Demo',
+        nav_comparison: 'Comparison',
+        nav_install: 'Installation',
+        hero_badge: '100% Free & Open-Source Islamic Software',
+        hero_title: 'How many hadiths have you shared believing they were authentic... <br/><span class="gradient-text">only to find they were fabricated?</span>',
+        hero_desc: 'Protect yourself and your community from weak and fabricated hadiths. Tibyan is a blazing-fast browser extension that verifies any prophetic narration in 1-click without leaving your webpage, backed by trusted hadith encyclopedias.',
+        hero_cta_primary: '<i class="fas fa-download"></i> Install Extension Free',
+        hero_cta_secondary: '<i class="fas fa-play"></i> Watch Live Demo',
+        demo_live_label: '⚡ Interactive Live Simulator',
+        demo_title: 'Click any sample to test instant Hadith verification:',
+        demo_sub: 'See how the verdict badge and citation card appear immediately',
+        demo_quote_prefix: 'Selected text on webpage:',
+        copy_card_btn: 'Copy Citation Card',
+        prob_badge: 'The Real Problem',
+        prob_title: 'Why Was Tibyan Built?',
+        prob_desc: 'Words carry immense responsibility. Falsely attributing sayings to Prophet Muhammad ﷺ is a grave matter, yet social media has made misinformation frictionless.',
+        prob_card1_t: 'Rampant Spread of Fabricated Hadiths',
+        prob_card1_d: 'Dozens of fabricated, weak, or completely baseless narrations circulate daily across WhatsApp groups, tweets, and posts, believed by readers in good faith.',
+        prob_card2_t: 'High Friction & Tedious Manual Lookup',
+        prob_card2_d: 'Verifying a hadith traditionally requires opening multiple new tabs, browsing dense databases, and deciphering complex scholarly jargon, causing most people to skip checking.',
+        prob_card3_t: 'Hesitation to Respectfully Correct Others',
+        prob_card3_d: 'Even when someone notices an unverified narration, gathering the book name, hadith scholar, page number, and source URL to write a polite reply takes too much effort.',
+        sol_badge: 'The Smart Solution',
+        sol_title: 'How Does Tibyan Transform Your Browsing?',
+        sol_desc: 'We built Tibyan to be the fastest, easiest hadith verification tool in the world—working right under your fingertips.',
+        sol_card1_t: '1-Click In-Page Verification',
+        sol_card1_d: 'Highlight any sentence and right-click. The verdict card pops up right next to your cursor without ever leaving your current webpage.',
+        sol_card2_t: 'Intuitive Color-Coded Badges',
+        sol_card2_d: 'Green for Authentic (Sahih), Amber for Weak (Daif), and Red for Fabricated (Mawdoo\'). Understand the ruling in less than one second.',
+        sol_card3_t: '1-Click Citation Card Generator',
+        sol_card3_d: 'Instantly copy an elegantly formatted scholarly citation card containing narrator, book, scholar, and URL to paste directly into comment replies.',
+        sol_card4_t: 'Offline-First Knowledge Engine',
+        sol_card4_d: 'Ships with an internal dataset of the most widespread narrations, delivering instant responses in milliseconds even with no internet connection.',
+        comp_badge: 'The Contrast',
+        comp_title: 'Traditional Lookup vs. Tibyan',
+        comp_desc: 'Notice the huge difference in time, effort, and certainty',
+        comp_th_f: 'Aspect',
+        comp_th_old: 'Traditional Way',
+        comp_th_new: 'With Tibyan ⚡',
+        comp_r1_f: 'Lookup Time',
+        comp_r1_old: '2 to 5 minutes',
+        comp_r1_new: 'Just 1 second!',
+        comp_r2_f: 'Tab Switching',
+        comp_r2_old: 'Open 2 to 4 tabs, leaving your reading',
+        comp_r2_new: '0 tabs — floating card appears in place',
+        comp_r3_f: 'Clarity for Average Reader',
+        comp_r3_old: 'Reading dense chains of narration (Isnad)',
+        comp_r3_new: 'Clear visual status badge (Green / Amber / Red)',
+        comp_r4_f: 'Replying to Correct Others',
+        comp_r4_old: 'Manually drafting text (often skipped)',
+        comp_r4_new: 'One-click copy of a complete citation card',
+        comp_r5_f: 'Offline Capability',
+        comp_r5_old: 'Completely impossible',
+        comp_r5_new: 'Works offline for famous narrations',
+        inst_badge: 'Start in 1 Minute',
+        inst_title: 'How to Install in Your Browser?',
+        inst_desc: 'Compatible with all Chromium-based browsers (Chrome, Edge, Brave, Opera) built on Manifest V3 standards.',
+        step1_t: 'Download Project Folder',
+        step1_d: 'Clone the repository from GitHub or download and extract the ZIP to your machine.',
+        step2_t: 'Open Extensions Page',
+        step2_d: 'Type the URL in your browser and enable Developer mode in the top corner.',
+        step3_t: 'Click "Load unpacked"',
+        step3_d: 'Select the tibyan-hadith-verifier project directory.',
+        step4_t: 'Start Verifying!',
+        step4_d: 'Highlight any hadith on any webpage, right-click, and see the truth in one click.',
+        cta_title: 'Be Part of Preserving Prophetic Truth',
+        cta_desc: 'Tibyan is open source and free for the sake of Allah. Support the project by spreading the word or starring ⭐ the repository on GitHub.',
+        cta_star_btn: 'Star Project on GitHub ⭐',
+        cta_dorar_btn: 'Visit Dorar.net Encyclopedia',
+        footer_rights: 'Tibyan Open Source Project released under MIT License • Designed & Built by FadySZ for the sake of Allah.'
+      }
+    };
+
+    let currentLang = 'ar';
+
+    // Interactive Demo Controller
+    const pills = document.querySelectorAll('.demo-pill');
+    const selectedTextEl = document.getElementById('demo-selected-text');
+    const badgeEl = document.getElementById('demo-badge');
+    const gradeLabelEl = document.getElementById('demo-grade-label');
+    const hadithTextEl = document.getElementById('demo-hadith-text');
+    const gradeValEl = document.getElementById('demo-grade-val');
+    const rawiValEl = document.getElementById('demo-rawi-val');
+    const mohadithValEl = document.getElementById('demo-mohadith-val');
+    const bookValEl = document.getElementById('demo-book-val');
+    const dorarLinkEl = document.getElementById('demo-dorar-link');
+    const copyBtnEl = document.getElementById('demo-copy-btn');
+    const copyTextEl = document.getElementById('demo-copy-text');
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const id = pill.getAttribute('data-id');
+        const data = sampleData[id];
+        if (data) {
+          selectedTextEl.textContent = data.text;
+          hadithTextEl.textContent = data.hadith;
+          gradeLabelEl.textContent = data.gradeLabel;
+          gradeValEl.textContent = data.gradeVal;
+          rawiValEl.textContent = data.rawi;
+          mohadithValEl.textContent = data.mohadith;
+          bookValEl.textContent = data.book;
+          dorarLinkEl.href = data.dorarUrl;
+
+          badgeEl.className = 'badge-chip ' + data.gradeClass;
+          badgeEl.querySelector('i').className = data.gradeClass === 'sahih' ? 'fas fa-check-circle' : 'fas fa-times-circle';
+
+          // Reset copy button
+          copyTextEl.textContent = currentLang === 'ar' ? 'نسخ بطاقة الرد والتخريج' : 'Copy Citation Card';
+          copyBtnEl.style.background = '#059669';
+        }
+      });
+    });
+
+    // Copy Citation Button Simulation
+    copyBtnEl.addEventListener('click', () => {
+      const activePill = document.querySelector('.demo-pill.active');
+      const id = activePill ? activePill.getAttribute('data-id') : 'china';
+      const data = sampleData[id];
+      
+      const citationText = `🔍 فحص وتوثيق حديث نبوي عبر إضافة «تبيان»:\n----------------------------------\n📜 المتن: «${data.hadith}»\n⚖️ الحكم: ${data.gradeLabel}\n👤 الراوي: ${data.rawi} | 📖 المحدث: ${data.mohadith}\n📚 المصدر: ${data.book}\n🔗 التخريج في الدرر السنية: ${data.dorarUrl}\n----------------------------------\n✨ تم التوثيق بواسطة إضافة تبيان مفتوحة المصدر`;
+      
+      navigator.clipboard.writeText(citationText).then(() => {
+        copyTextEl.textContent = currentLang === 'ar' ? '✅ تم نسخ بطاقة التخريج!' : '✅ Citation Copied!';
+        copyBtnEl.style.background = '#047857';
+        setTimeout(() => {
+          copyTextEl.textContent = currentLang === 'ar' ? 'نسخ بطاقة الرد والتخريج' : 'Copy Citation Card';
+          copyBtnEl.style.background = '#059669';
+        }, 2200);
+      });
+    });
+
+    // Language Toggle
+    const langToggleBtn = document.getElementById('lang-toggle-btn');
+    const langLabel = document.getElementById('lang-label');
+
+    langToggleBtn.addEventListener('click', () => {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      document.body.classList.toggle('lang-en', currentLang === 'en');
+      document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+      document.documentElement.setAttribute('lang', currentLang);
+      langLabel.textContent = currentLang === 'ar' ? 'English' : 'العربية';
+
+      // Update text in DOM
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[currentLang] && i18n[currentLang][key]) {
+          el.innerHTML = i18n[currentLang][key];
+        }
+      });
+    });
+  </script>
+</body>
+</html>
