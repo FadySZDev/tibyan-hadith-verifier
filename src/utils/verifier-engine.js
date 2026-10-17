@@ -14,9 +14,54 @@
 })(typeof self !== 'undefined' ? self : this, function (TextCleaner, OfflineDB) {
   'use strict';
 
-  // الرابط الافتراضي للـ API (قابل للتخصيص من إعدادات الإضافة)
-  const DEFAULT_API_BASE = 'https://dorar-hadith-api.hirenodes.com';
+  // الرابط الرسمي للموسوعة الحديثية بموقع الدرر السنية
+  const DORAR_API_URL = 'https://dorar.net/dorar_api.json?skey=';
   const DORAR_WEB_SEARCH = 'https://dorar.net/hadith/search?q=';
+  const DEFAULT_API_BASE = DORAR_API_URL;
+
+  /**
+   * تفكيك واستخراج نتائج الأحاديث من رد الدرر السنية
+   * @param {string} html 
+   * @returns {Array<object>}
+   */
+  function parseDorarHtml(html) {
+    if (!html || typeof html !== 'string') return [];
+    const results = [];
+    const regex = /<div class="hadith"[^>]*>([\s\S]*?)<\/div>\s*<div class="hadith-info">([\s\S]*?)<\/div>/gi;
+    let match;
+
+    while ((match = regex.exec(html)) !== null) {
+      const rawHadith = match[1]
+        .replace(/<[^>]+>/g, '')
+        .replace(/^\s*\d+\s*-\s*/, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      const info = match[2];
+
+      const getField = (label) => {
+        const r = new RegExp('<span class="info-subtitle">' + label + ':</span>\\s*([^<]+)', 'i');
+        const m = info.match(r);
+        return m ? m[1].replace(/\s+/g, ' ').trim() : '';
+      };
+
+      const gradeMatch = info.match(/<span class="info-subtitle">خلاصة حكم المحدث:<\/span>\s*<span[^>]*>([\s\S]*?)<\/span>/i);
+      const grade = gradeMatch ? gradeMatch[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '';
+
+      if (rawHadith) {
+        results.push({
+          hadith: rawHadith,
+          rawi: getField('الراوي'),
+          mohadith: getField('المحدث'),
+          book: getField('المصدر'),
+          numberOrPage: getField('الصفحة أو الرقم'),
+          grade: grade
+        });
+      }
+    }
+
+    return results;
+  }
 
   /**
    * تصنيف حكم المحدث إلى حالة لونية قياسية
@@ -155,14 +200,23 @@
 
     // 2. البحث عبر واجهة الـ API للدرر السنية
     try {
-      const apiEndpoint = options.apiEndpoint || `${DEFAULT_API_BASE}/hadith/search?value=${encodeURIComponent(cleanQuery)}`;
+      let apiEndpoint = options.apiEndpoint;
+      if (!apiEndpoint) {
+        apiEndpoint = `${DORAR_API_URL}${encodeURIComponent(cleanQuery)}`;
+      } else if (!apiEndpoint.includes('?') && !apiEndpoint.endsWith('=')) {
+        apiEndpoint = `${apiEndpoint}?skey=${encodeURIComponent(cleanQuery)}`;
+      } else if (apiEndpoint.endsWith('=')) {
+        apiEndpoint = `${apiEndpoint}${encodeURIComponent(cleanQuery)}`;
+      }
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // مهلة 8 ثوانٍ
+      const timeoutId = setTimeout(() => controller.abort(), 9000); // مهلة 9 ثوانٍ
 
       const response = await fetch(apiEndpoint, {
         signal: controller.signal,
-        headers: { 'Accept': 'application/json' }
+        headers: {
+          'Accept': 'application/json, text/plain, */*'
+        }
       });
       clearTimeout(timeoutId);
 
@@ -170,8 +224,18 @@
         throw new Error(`تعذر الوصول للخادم: رمز الرد ${response.status}`);
       }
 
-      const result = await response.json();
-      const items = result.data || result;
+      const data = await response.json();
+      let items = [];
+
+      // إذا كان الرد من واجهة الدرر المباشرة (dorar_api.json)
+      if (data && data.ahadith && data.ahadith.result) {
+        items = parseDorarHtml(data.ahadith.result);
+      } else if (Array.isArray(data.data)) {
+        // دعم التوافقية مع أي API وسيط يعيد data مصفوفة
+        items = data.data;
+      } else if (Array.isArray(data)) {
+        items = data;
+      }
 
       if (!Array.isArray(items) || items.length === 0) {
         return {
@@ -183,8 +247,8 @@
         };
       }
 
-      // أخذ أفضل نتيجة مطابقة
-      const top = items[0];
+      // إعطاء الأولوية للرواية الصحيحة في حال تعدد الروايات، وإلا أخذ النتيجة الأولى
+      const top = items.find(i => classifyGrade(i.grade) === 'sahih') || items[0];
       const status = classifyGrade(top.grade);
 
       return {
@@ -193,13 +257,13 @@
         query: cleanQuery,
         hadith: top.hadith || cleanQuery,
         rawi: top.rawi || 'غير محدد',
-        mohadith: top.mohdith || top.mohadith || 'غير محدد',
+        mohadith: top.mohadith || top.mohdith || 'غير محدد',
         book: top.book || 'غير محدد',
         numberOrPage: top.numberOrPage || '',
         grade: top.grade || 'لم يُذكر',
         status: status,
         statusMeta: getStatusMetadata(status),
-        explanation: top.explainGrade || '',
+        explanation: top.explanation || top.explainGrade || '',
         takhrij: top.takhrij || '',
         dorarUrl: `${DORAR_WEB_SEARCH}${encodeURIComponent(cleanQuery)}`,
         totalResults: items.length
@@ -220,7 +284,9 @@
     classifyGrade,
     getStatusMetadata,
     verifyHadith,
+    parseDorarHtml,
     DEFAULT_API_BASE,
+    DORAR_API_URL,
     DORAR_WEB_SEARCH
   };
 });

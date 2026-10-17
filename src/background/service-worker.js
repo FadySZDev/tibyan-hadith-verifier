@@ -21,13 +21,13 @@ chrome.runtime.onInstalled.addListener(async () => {
     contexts: ['selection']
   });
 
-  // تهيئة الإعدادات الأولية
+  // تهيئة الإعدادات الأولية وإزالة أي روابط قديمة غير صالحة
   const settings = await chrome.storage.local.get(['apiEndpoint', 'history', 'autoLookup']);
-  if (!settings.apiEndpoint) {
+  if (!settings.apiEndpoint || settings.apiEndpoint.includes('hirenodes.com')) {
     await chrome.storage.local.set({
-      apiEndpoint: TibyanVerifierEngine.DEFAULT_API_BASE,
-      history: [],
-      autoLookup: true
+      apiEndpoint: TibyanVerifierEngine.DORAR_API_URL,
+      history: settings.history || [],
+      autoLookup: settings.autoLookup !== undefined ? settings.autoLookup : true
     });
   }
   console.log('Tibyan Hadith Verifier initialized successfully.');

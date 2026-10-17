@@ -75,6 +75,23 @@ runTest('Should identify authentic hadith (إنما الأعمال بالنيا�
   assert.strictEqual(match.status, 'sahih');
 });
 
+runTest('Should identify supplication (اللهم إني أسألك بأن لك الحمد - اسم الله الأعظم)', () => {
+  const query = 'اللهم إني أسألك بأن لك الحمد، لا إله إلا أنت المنان، يا بديع السموات والأرض';
+  const { normalizedText } = TextCleaner.prepareQuery(query);
+  const match = OfflineDB.findInOfflineDB(normalizedText);
+  assert.ok(match, 'Hadith should be found in offline DB');
+  assert.strictEqual(match.status, 'sahih');
+  assert.ok(match.hadith.includes('بأنَّ لك الحمدَ'));
+});
+
+runTest('Should identify Sayyid al-Istighfar (سيد الاستغفار)', () => {
+  const query = 'اللهم أنت ربي لا إله إلا أنت خلقتني وأنا عبدك';
+  const { normalizedText } = TextCleaner.prepareQuery(query);
+  const match = OfflineDB.findInOfflineDB(normalizedText);
+  assert.ok(match, 'Hadith should be found in offline DB');
+  assert.strictEqual(match.status, 'sahih');
+});
+
 // 3. Verifier Engine Tests
 console.log('\n--- 3. Testing Verifier Engine & Grading Classification ---');
 
@@ -97,6 +114,35 @@ runTest('Should return status metadata with colors and icons', () => {
   const meta = VerifierEngine.getStatusMetadata('sahih');
   assert.strictEqual(meta.icon, '✅');
   assert.ok(meta.label.includes('صحيح'));
+});
+
+runTest('Should correctly parse Dorar HTML into structured items', () => {
+  const sampleHtml = `
+    <div class="hadith" style="text-align:justify;">1 - مَن غَشَّنَا فليسَ مِنَّا. </div>
+    <div class="hadith-info">
+      <span class="info-subtitle">الراوي:</span> أبو هريرة
+      <span class="info-subtitle">المحدث:</span> مسلم
+      <span class="info-subtitle">المصدر:</span> صحيح مسلم
+      <span class="info-subtitle">الصفحة أو الرقم:</span> 101
+      <span class="info-subtitle">خلاصة حكم المحدث:</span> <span class="grade">[صحيح]</span>
+    </div>
+  `;
+  const items = VerifierEngine.parseDorarHtml(sampleHtml);
+  assert.strictEqual(items.length, 1);
+  assert.strictEqual(items[0].hadith, 'مَن غَشَّنَا فليسَ مِنَّا.');
+  assert.strictEqual(items[0].rawi, 'أبو هريرة');
+  assert.strictEqual(items[0].mohadith, 'مسلم');
+  assert.strictEqual(items[0].book, 'صحيح مسلم');
+  assert.strictEqual(items[0].numberOrPage, '101');
+  assert.strictEqual(items[0].grade, '[صحيح]');
+});
+
+runTest('Should verify hadith instantly using offline knowledge base', async () => {
+  const res = await VerifierEngine.verifyHadith('اللهم إني أسألك بأن لك الحمد لا إله إلا أنت المنان');
+  assert.strictEqual(res.success, true);
+  assert.strictEqual(res.source, 'offline');
+  assert.strictEqual(res.status, 'sahih');
+  assert.strictEqual(res.mohadith, 'الألباني / شعيب الأرناؤوط');
 });
 
 // 4. Citation Card Generator Tests
