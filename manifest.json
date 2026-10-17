@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "short_name": "تبيان (Tibyan)",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "__MSG_extensionDescription__",
   "default_locale": "ar",
   "icons": {
@@ -27,7 +27,9 @@
   "permissions": [
     "contextMenus",
     "storage",
-    "activeTab"
+    "activeTab",
+    "scripting",
+    "notifications"
   ],
   "host_permissions": [
     "https://dorar.net/*",
